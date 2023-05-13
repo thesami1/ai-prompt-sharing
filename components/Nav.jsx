@@ -7,6 +7,8 @@ const Nav = () => {
   const isUserLoggedIn = true;
 
   const [providers, setProviders] = useState(null);
+  const [toggleDropDown, settoggleDropDown] = useState(false);
+
 
   useEffect(() => {
     const setProviders = async () => {
@@ -63,6 +65,58 @@ const Nav = () => {
           </>
         }
       </div>
+
+      {/* Mobile Navigation */}
+      <div className="sm:hidden flex relative">
+        {isUserLoggedIn ? (
+          <div className="flex">
+            <Image
+              src="/assets/images/logo.svg"
+              alt="Profile"
+              width={37}
+              height={37}
+              className="rounded-full"
+              onClick={() => settoggleDropDown((prevState) => !prevState)}
+
+
+            />
+
+            {toggleDropDown &&
+              (<div className="dropdown">
+                <Link href="/profile" className="dropdown_link" onClick={() => settoggleDropDown(false)}>
+                  My Profile
+                </Link>
+
+                <Link href="/create-prompt" className="dropdown_link" onClick={() => settoggleDropDown(false)}>
+                  Create Prompt
+                </Link>
+
+                <button type="button"
+                  onClick={() => {
+                    settoggleDropDown(false);
+                    signOut();
+                  }}
+                  className="mt-5 w-full black_btn"
+                  >
+                  Sign Out
+                </button>
+              </div>
+              )}
+
+
+          </div>
+        ) :
+          <>
+            {providers && Object.values(providers).map(provider => (
+              <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className="black_btn">
+                Sign in with {provider.name}
+              </button>
+            ))}
+          </>
+        }
+      </div>
+
+
     </nav>
   )
 }
